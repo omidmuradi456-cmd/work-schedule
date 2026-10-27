@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSFiddle q7wtLhyv</title>
+
+  <style>
+    
+  </style>
+
+  
+</head>
+<body>
+  <!DOCTYPE html>
+<html lang="fa" dir="rtl" id="htmlRoot" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work Manager - مدیریت کار و معاش</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --surface: #1e293b;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --border: #334155;
+            --border-light: #475569;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --radius: 14px;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #f1f5f9;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-secondary: #64748b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border: #cbd5e1;
+            --border-light: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+
+        nav {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .brand-logo { font-size: 1.1rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+        
+        .menu-toggle-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text-main);
+            padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; display: none;
+        }
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            height: calc(100vh - 61px);
+            position: sticky;
+            top: 61px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        [dir="ltr"] .sidebar { border-left: none; border-right: 1px solid var(--border); }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+            width: 100%;
+        }
+        [dir="ltr"] .nav-btn { text-align: left; }
+        .nav-btn.active, .nav-btn:hover {
+            background-color: var(--primary);
+            color: #fff;
+        }
+
+        main { flex: 1; padding: 24px; max-width: 900px; margin: 0 auto; width: 100%; overflow-y: auto; }
+
+        header.top-bar {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+            background: var(--surface); padding: 16px 20px; border-radius: var(--radius); border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+        .grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 14px; }
+        @media(min-width: 600px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
+        .stat-title { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 4px; }
+        .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+
+        button, .btn { background-color: var(--primary); color: white; border: none; padding: 12px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
+        button:hover { background-color: var(--primary-hover); }
+        .btn-danger { background-color: var(--danger); width: auto; padding: 6px 14px; font-size: 0.85rem; }
+        .btn-warning { background-color: var(--warning); width: auto; padding: 6px 14px; font-size: 0.85rem; color: #fff; }
+        .btn-success { background-color: var(--success); width: auto; padding: 8px 14px; font-size: 0.85rem; color: #fff; margin-bottom: 12px; }
+
+        input, select, textarea { width: 100%; padding: 12px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 10px; color: var(--text-main); margin-top: 6px; margin-bottom: 14px; font-size: 0.95rem; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); }
+        label { font-weight: 600; font-size: 0.9rem; color: var(--text-secondary); display: block; }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.9rem; min-width: 450px; }
+        th, td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border); }
+        [dir="ltr"] th, [dir="ltr"] td { text-align: left; }
+        th { background-color: rgba(128,128,128,0.1); color: var(--text-secondary); }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        .preview-img { max-width: 70px; max-height: 70px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; object-fit: cover; }
+        .employer-box { background: var(--bg-main); padding: 14px; border-radius: 10px; margin-bottom: 12px; border: 1px solid var(--border); }
+
+        @media (max-width: 768px) {
+            .menu-toggle-btn { display: inline-flex; align-items: center; justify-content: center; }
+            .sidebar {
+                position: fixed;
+                right: -280px;
+                top: 61px;
+                height: calc(100vh - 61px);
+                z-index: 999;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            }
+            [dir="ltr"] .sidebar { right: auto; left: -280px; }
+            .sidebar.mobile-open { right: 0; }
+            [dir="ltr"] .sidebar.mobile-open { left: 0; }
+            main { padding: 14px; }
+        }
+
+        #imgModal {
+            display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; padding: 20px;
+        }
+        #imgModal img { max-width: 100%; max-height: 90vh; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        #imgModal .close-btn {
+            position: absolute; top: 20px; left: 20px; background: #fff; color: #000; border: none;
+            width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <button class="menu-toggle-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="brand-logo">
+                <span>⚙️</span> My Work Manager
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn" style="width: auto; padding: 6px 12px; font-size: 0.9rem;" onclick="toggleTheme()" id="themeToggleBtn">☀️</button>
+            <select id="languageSelector" onchange="changeLanguage(this.value)" style="margin:0; width:95px; padding:6px; font-size:0.85rem;">
+                <option value="fa">فارسی</option>
+                <option value="fi">Suomi</option>
+            </select>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <!-- Sidebar Menu -->
+        <aside class="sidebar" id="appSidebar">
+            <button class="nav-btn active" onclick="switchView('dashboard', this, 'dashTitle')" data-i18n="navDashboard">📊 داشبورد</button>
+            <button class="nav-btn" onclick="switchView('companies', this, 'compListTitle')" data-i18n="navCompanies">🏢 مدیریت شرکت‌ها</button>
+            <button class="nav-btn" onclick="switchView('profile', this, 'profileTitle')" data-i18n="navProfile">👤 پروفایل شخصی</button>
+            <button class="nav-btn" onclick="switchView('shifts', this, 'shiftAddTitle')" data-i18n="navShifts">⏱️ ساعات کاری و شیفت‌ها</button>
+            <button class="nav-btn" onclick="switchView('payroll', this, 'payAddTitle')" data-i18n="navPayroll">💶 معاش و پرداخت‌ها</button>
+            <button class="nav-btn" onclick="switchView('monthlySheets', this, 'sheetTitle')" data-i18n="navMonthlySheets">📑 برگه ساعات ماهانه</button>
+            <button class="nav-btn" onclick="switchView('contracts', this, 'docAddTitle')" data-i18n="navContracts">📜 قراردادها و اسناد</button>
+            <button class="nav-btn" onclick="switchView('leave', this, 'leaveTitle')" data-i18n="navLeave">🩺 مرخصی و بیماری</button>
+            <button class="nav-btn" onclick="switchView('calendar', this, 'calendarTitle')" data-i18n="navCalendar">📅 تقویم کاری</button>
+            <button class="nav-btn" onclick="switchView('reports', this, 'reportsTitle')" data-i18n="navReports">📈 گزارش‌گیری پیشرفته</button>
+            <button class="nav-btn" onclick="switchView('settings', this, 'settingsTitle')" data-i18n="navSettings">⚙️ تنظیمات</button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <header class="top-bar">
+                <h3 id="currentViewTitle" data-i18n="dashTitle">داشبورد مدیریتی</h3>
+                <select id="globalCompanyFilter" onchange="refreshAllDataViews()" style="margin:0; width:140px; padding:8px;">
+                    <option value="all" data-i18n="optAllCompanies">همه شرکت‌ها</option>
+                </select>
+            </header>
+
+            <!-- 1. Dashboard -->
+            <section id="view-dashboard" class="view-section active" data-title-key="dashTitle">
+                <div class="stat-card"><span class="stat-title" data-i18n="statCompanies">شرکت‌های ثبت‌شده</span><span class="stat-value" id="dashTotalCompanies">0</span></div>
+                <div class="stat-card"><span class="stat-title" data-i18n="statHours">مجموع ساعات</span><span class="stat-value" id="dashTotalHours">0 ساعت</span></div>
+                <div class="stat-card"><span class="stat-title" data-i18n="statGross">کل درآمد (ناخالص)</span><span class="stat-value" id="dashGrossPay">0.00 €</span></div>
+                
+                <div class="card">
+                    <h4 data-i18n="dashRecentShifts" style="margin-bottom: 12px; color: var(--text-secondary);">آخرین شیفت‌های ثبت‌شده</h4>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th data-i18n="thDate">تاریخ</th><th data-i18n="thCompany">شرکت</th><th data-i18n="thHours">ساعت</th><th data-i18n="thPay">معاش</th></tr></thead>
+                            <tbody id="dashShiftsTableBody"><tr><td colspan="4" style="text-align:center;" data-i18n="msgNoRecord">ثبت نشده است.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Companies -->
+            <section id="view-companies" class="view-section" data-title-key="compListTitle">
+                <div class="card">
+                    <h3 data-i18n="compAddTitle" style="margin-bottom: 14px;">افزودن / ویرایش شرکت و کارفرمایان</h3>
+                    <form onsubmit="saveCompany(event)">
+                        <input type="hidden" id="editCompanyId">
+                        <label data-i18n="lblCompanyName">نام شرکت</label>
+                        <input type="text" id="compName" required data-i18n-placeholder="phCompanyName" placeholder="نام شرکت را وارد کنید">
+                        
+                        <label data-i18n="lblHourlyRate">نرخ معاش ساعتی (€)</label>
+                        <input type="text" id="compRate" required data-i18n-placeholder="phHourlyRate" placeholder="مثال: 12.5">
+
+                        <hr style="margin: 20px 0; border:0; border-top:1px solid var(--border);">
+                        <h4 data-i18n="lblEmployersListTitle" style="margin-bottom: 12px;">کارفرمایان این شرکت</h4>
+                        <div id="employersContainer"></div>
+                        <button type="button" class="btn btn-success" onclick="addEmployerField()" data-i18n="btnAddEmployer">+ افزودن کارفرما</button>
+                        
+                        <button type="submit" class="btn" style="margin-top: 14px;" data-i18n="btnSaveCompany">ذخیره شرکت</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="compListTitle" style="margin-bottom: 14px;">فهرست شرکت‌ها</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th data-i18n="thName">نام شرکت</th><th data-i18n="thEmployers">کارفرمایان</th><th data-i18n="thRate">نرخ</th><th data-i18n="thActions">عملیات</th></tr></thead>
+                            <tbody id="companiesTableBody"><tr><td colspan="4" style="text-align:center;" data-i18n="msgNoCompany">شرکتی ثبت نشده است.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Profile -->
+            <section id="view-profile" class="view-section" data-title-key="profileTitle">
+                <div class="card">
+                    <h3 data-i18n="profileTitle" style="margin-bottom: 14px;">پروفایل شخصی کاربر</h3>
+                    <form onsubmit="saveProfile(event)">
+                        <label data-i18n="lblFullName">نام و نام خانوادگی</label>
+                        <input type="text" id="profileName" data-i18n-placeholder="phFullName" placeholder="نام خود را وارد کنید">
+                        <label data-i18n="lblEmail">ایمیل یا شماره تماس</label>
+                        <input type="text" id="profileContact" data-i18n-placeholder="phEmail" placeholder="ایمیل یا تلفن">
+                        <button type="submit" class="btn" data-i18n="btnSaveProfile">ذخیره پروفایل</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 4. Shifts -->
+            <section id="view-shifts" class="view-section" data-title-key="shiftAddTitle">
+                <div class="card">
+                    <h3 data-i18n="shiftAddTitle" style="margin-bottom: 14px;">ثبت / ویرایش شیفت کاری</h3>
+                    <form onsubmit="saveShift(event)">
+                        <input type="hidden" id="editShiftId">
+                        <label data-i18n="lblSelectCompany">انتخاب شرکت</label><select id="shiftCompanyId" required></select>
+                        <label data-i18n="lblShiftDate">تاریخ کار</label><input type="date" id="shiftDate" required>
+                        <div class="grid-2">
+                            <div><label data-i18n="lblTimeStart">ساعت شروع</label><input type="time" id="shiftStart" required value=""></div>
+                            <div><label data-i18n="lblTimeEnd">ساعت پایان</label><input type="time" id="shiftEnd" required value=""></div>
+                        </div>
+                        <label data-i18n="lblBreakHours">استراحت بدون حقوق (ساعت)</label><input type="number" id="shiftBreak" step="0.25" value="0">
+                        <button type="submit" class="btn" data-i18n="btnSaveShift">ثبت شیفت کاری</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="shiftListTitle" style="margin-bottom: 14px;">فهرست شیفت‌ها</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th data-i18n="thDate">تاریخ</th><th data-i18n="thCompany">شرکت</th><th data-i18n="thHours">ساعت</th><th data-i18n="thPay">معاش</th><th data-i18n="thActions">عملیات</th></tr></thead>
+                            <tbody id="shiftsTableBody"><tr><td colspan="5" style="text-align:center;" data-i18n="msgNoRecord">رکوردی ثبت نشده است.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Payroll -->
+            <section id="view-payroll" class="view-section" data-title-key="payAddTitle">
+                <div class="card">
+                    <h3 data-i18n="payAddTitle" style="margin-bottom: 14px;">ثبت / ویرایش پرداخت</h3>
+                    <form onsubmit="savePayment(event)">
+                        <input type="hidden" id="editPaymentId">
+                        <label data-i18n="lblSelectCompany">انتخاب شرکت</label><select id="paymentCompanyId" required></select>
+                        <label data-i18n="lblPayDate">تاریخ پرداخت</label><input type="date" id="paymentDate" required>
+                        <label data-i18n="lblPayAmount">مبلغ دریافتی (€)</label><input type="text" id="paymentAmount" required placeholder="0.00">
+                        <label data-i18n="lblPayMethod">روش پرداخت</label>
+                        <select id="paymentMethod" required>
+                            <option value="bank" data-i18n="optBank">پرداخت به کارت بانکی (Pankkisiirto / Kortti)</option>
+                            <option value="cash" data-i18n="optCash">پرداخت پول نقد (Käteinen)</option>
+                        </select>
+                        <button type="submit" class="btn" data-i18n="btnSavePay">ثبت پرداخت</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="payLedgerTitle" style="margin-bottom: 14px;">فهرست پرداخت‌های انجام‌شده</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th data-i18n="thDate">تاریخ</th><th data-i18n="thCompany">شرکت</th><th data-i18n="thAmount">مبلغ</th><th data-i18n="thMethod">روش</th><th data-i18n="thActions">عملیات</th></tr></thead>
+                            <tbody id="paymentsTableBody"><tr><td colspan="5" style="text-align:center;" data-i18n="msgNoPayment">پرداختی ثبت نشده است.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="paySummaryTitle" style="margin-bottom: 14px;">دفتر مانده معاش و طلب‌ها</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th data-i18n="thCompany">شرکت</th><th data-i18n="thGrossTotal">کل حقوق</th><th data-i18n="thReceived">دریافتی</th><th data-i18n="thRemaining">باقی‌مانده</th></tr></thead>
+                            <tbody id="payrollSummaryTableBody"><tr><td colspan="4" style="text-align:center;" data-i18n="msgNoData">اطلاعاتی موجود نیست.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Monthly Sheets -->
+            <section id="view-monthlySheets" class="view-section" data-title-key="sheetTitle">
+                <div class="card">
+                    <h3 data-i18n="sheetTitle" style="margin-bottom: 14px;">برگه ساعات ماهانه و آپلود عکس</h3>
+                    <p data-i18n="sheetDesc" style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:14px;">عکس برگه کاغذی را آپلود کنید.</p>
+                    <form onsubmit="saveMonthlySheet(event)">
+                        <input type="hidden" id="editSheetId">
+                        <label data-i18n="lblSelectCompany">انتخاب شرکت</label><select id="sheetCompanyId" required></select>
+                        <label data-i18n="lblMonthYear">ماه و سال</label><input type="month" id="sheetMonthYear" required>
+                        <label data-i18n="lblEmployerHours">ساعات روی برگه کارفرما</label><input type="number" id="sheetEmployerHours" step="0.5" placeholder="0">
+                        <label data-i18n="lblUploadPhoto">آپلود عکس برگه ساعات کاری</label>
+                        <input type="file" id="sheetPhotoInput" accept="image/*">
+                        <button type="submit" class="btn" data-i18n="btnSaveSheet">ذخیره برگه ماهانه</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="sheetListTitle" style="margin-bottom: 14px;">برگه‌های آپلود شده</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th data-i18n="thMonth">ماه</th><th data-i18n="thCompany">شرکت</th><th data-i18n="thPhoto">عکس برگه</th><th data-i18n="thActions">عملیات</th></tr></thead>
+                            <tbody id="sheetsTableBody"><tr><td colspan="4" style="text-align:center;" data-i18n="msgNoSheet">برگه‌ای ثبت نشده است.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Contracts -->
+            <section id="view-contracts" class="view-section" data-title-key="docAddTitle">
+                <div class="card">
+                    <h3 data-i18n="docAddTitle" style="margin-bottom: 14px;">ثبت / ویرایش قرارداد و اسناد</h3>
+                    <form onsubmit="saveDocument(event)">
+                        <input type="hidden" id="editDocId">
+                        <label data-i18n="lblSelectCompany">انتخاب شرکت</label><select id="docCompanyId" required></select>
+                        <label data-i18n="lblDocType">نوع سند</label>
+                        <select id="docType">
+                            <option value="contract" data-i18n="optContract">قرارداد کاری</option>
+                            <option value="payslip" data-i18n="optPayslip">فیش معاش</option>
+                            <option value="receipt" data-i18n="optReceipt">رسید</option>
+                            <option value="other" data-i18n="optOther">سایر</option>
+                        </select>
+                        <label data-i18n="lblDocTitle">عنوان سند</label><input type="text" id="docTitleInput" required data-i18n-placeholder="defaultDocTitle">
+                        <label data-i18n="lblUploadDocPhoto">آپلود عکس سند یا قرارداد</label>
+                        <input type="file" id="docPhotoInput" accept="image/*">
+                        <button type="submit" class="btn" data-i18n="btnSaveDoc">ذخیره سند</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3 data-i18n="docListTitle" style="margin-bottom: 14px;">فهرست اسناد</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th data-i18n="thTitle">عنوان</th><th data-i18n="thType">نوع</th><th data-i18n="thCompany">شرکت</th><th data-i18n="thPhoto">عکس سند</th><th data-i18n="thActions">عملیات</th></tr></thead>
+                            <tbody id="documentsTableBody"><tr><td colspan="5" style="text-align:center;" data-i18n="msgNoDoc">سندی ثبت نشده است.</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Leave / Sickness -->
+            <section id="view-leave" class="view-section" data-title-key="leaveTitle">
+                <div class="card">
+                    <h3 data-i18n="leaveTitle" style="margin-bottom: 14px;">مرخصی و بیماری</h3>
+                    <p data-i18n="leaveDesc" style="color:var(--text-secondary);">ثبت روزهای مرخصی استحقاقی یا استعلاجی (بیماری).</p>
+                    <form onsubmit="saveLeave(event)" style="margin-top: 14px;">
+                        <label data-i18n="lblLeaveType">نوع</label>
+                        <select id="leaveType"><option value="sick" data-i18n="optSick">بیماری (Sairausloma)</option><option value="vacation" data-i18n="optVacation">مرخصی (Loma)</option></select>
+                        <label data-i18n="lblLeaveDate">تاریخ</label><input type="date" id="leaveDate" required>
+                        <button type="submit" class="btn" data-i18n="btnSaveLeave">ثبت مرخصی</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table style="margin-top:0;"><thead><tr><th data-i18n="thDate">تاریخ</th><th data-i18n="thType">نوع</th><th data-i18n="thActions">عملیات</th></tr></thead><tbody id="leaveTableBody"><tr><td colspan="3" style="text-align:center;" data-i18n="msgNoRecord">ثبت نشده است.</td></tr></tbody></table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. Calendar -->
+            <section id="view-calendar" class="view-section" data-title-key="calendarTitle">
+                <div class="card">
+                    <h3 data-i18n="calendarTitle" style="margin-bottom: 14px;">تقویم کاری</h3>
+                    <p data-i18n="calendarDesc" style="color:var(--text-secondary);">نمای کلی شیفت‌ها و برنامه‌های کاری شما.</p>
+                    <div id="calendarViewContainer" style="margin-top: 14px;"></div>
+                </div>
+            </section>
+
+            <!-- 10. Advanced Reports -->
+            <section id="view-reports" class="view-section" data-title-key="reportsTitle">
+                <div class="card">
+                    <h3 data-i18n="reportsTitle" style="margin-bottom: 14px;">گزارش‌گیری پیشرفته</h3>
+                    <p data-i18n="reportsDesc" style="color:var(--text-secondary);">تحلیل کلی ساعات و درآمدها بر اساس بازه زمانی.</p>
+                    <div id="reportSummaryBox" style="margin-top: 14px; font-size: 1.1rem; font-weight: bold; color: var(--primary);"></div>
+                </div>
+            </section>
+
+            <!-- 11. Settings -->
+            <section id="view-settings" class="view-section" data-title-key="settingsTitle">
+                <div class="card">
+                    <h3 data-i18n="settingsTitle" style="margin-bottom: 14px;">پشتیبان‌گیری و اطلاعات</h3>
+                    <button class="btn" style="margin-bottom: 12px;" onclick="exportData()" data-i18n="btnExport">پشتیبان‌گیری (JSON)</button>
+                    <button class="btn" style="background: var(--text-secondary);" onclick="importDataPrompt()" data-i18n="btnImport">بازیابی اطلاعات</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for viewing full image -->
+    <div id="imgModal">
+        <button class="close-btn" onclick="closeModal()">×</button>
+        <img id="modalImg" src="">
+    </div>
+
+    <script>
+        const DB_KEY = "MyWorkManager_Full_v22";
+        function getAppData() {
+            try { return JSON.parse(localStorage.getItem(DB_KEY)) || { companies: [], shifts: [], payments: [], sheets: [], documents: [], profile: {}, leaves: [] }; }
+            catch(e) { return { companies: [], shifts: [], payments: [], sheets: [], documents: [], profile: {}, leaves: [] }; }
+        }
+        function saveAppData(d) { localStorage.setItem(DB_KEY, JSON.stringify(d)); }
+
+        // Smart translation mapping for company names across languages
+        const companyTranslations = {
+            "رستوران و پیتزا فروشی سولی": "Ravintola ja Pizzeria Soli",
+            "Ravintola ja Pizzeria Soli": "رستوران و پیتزا فروشی سولی",
+            "Restaurant Soli": "Ravintola Soli",
+            "Ravintola Soli": "Restaurant Soli"
+        };
+
+        function getLocalizedCompanyName(name, targetLang) {
+            if (!name) return "";
+            if (targetLang === 'fi') {
+                return companyTranslations[name] || name;
+            } else {
+                // Find Persian equivalent if switching to fa
+                for (let fa in companyTranslations) {
+                    if (companyTranslations[fa] === name) return fa;
+                }
+                return name;
+            }
+        }
+
+        const i18n = {
+            fa: {
+                navDashboard: "📊 داشبورد",
+                navCompanies: "🏢 مدیریت شرکت‌ها",
+                navProfile: "👤 پروفایل شخصی",
+                navShifts: "⏱️ ساعات کاری و شیفت‌ها",
+                navPayroll: "💶 معاش و پرداخت‌ها",
+                navMonthlySheets: "📑 برگه ساعات ماهانه",
+                navContracts: "📜 قراردادها و اسناد",
+                navLeave: "🩺 مرخصی و بیماری",
+                navCalendar: "📅 تقویم کاری",
+                navReports: "📈 گزارش‌گیری پیشرفته",
+                navSettings: "⚙️ تنظیمات",
+                dashTitle: "داشبورد مدیریتی",
+                optAllCompanies: "همه شرکت‌ها",
+                statCompanies: "شرکت‌های ثبت‌شده",
+                statHours: "مجموع ساعات",
+                statGross: "کل درآمد (ناخالص)",
+                dashRecentShifts: "آخرین شیفت‌های ثبت‌شده",
+                thDate: "تاریخ",
+                thCompany: "شرکت",
+                thHours: "ساعت",
+                thPay: "معاش",
+                thActions: "عملیات",
+                compAddTitle: "افزودن / ویرایش شرکت و کارفرمایان",
+                lblCompanyName: "نام شرکت",
+                lblHourlyRate: "نرخ معاش ساعتی (€)",
+                phCompanyName: "نام شرکت را وارد کنید",
+                phHourlyRate: "مثال: 12.5",
+                lblEmployersListTitle: "کارفرمایان این شرکت",
+                btnAddEmployer: "+ افزودن کارفرما",
+                lblEmpTitle: "مشخصات کارفرما",
+                lblEmpName: "نام",
+                lblEmpLastName: "تخلص (نام خانوادگی)",
+                lblEmpPhone: "شماره تماس",
+                btnSaveCompany: "ذخیره شرکت",
+                compListTitle: "فهرست شرکت‌ها",
+                thName: "نام شرکت",
+                thEmployers: "کارفرمایان",
+                thRate: "نرخ",
+                profileTitle: "پروفایل شخصی کاربر",
+                lblFullName: "نام و نام خانوادگی",
+                lblEmail: "ایمیل یا شماره تماس",
+                phFullName: "نام خود را وارد کنید",
+                phEmail: "ایمیل یا تلفن",
+                btnSaveProfile: "ذخیره پروفایل",
+                shiftAddTitle: "ثبت / ویرایش شیفت کاری",
+                lblSelectCompany: "انتخاب شرکت",
+                lblShiftDate: "تاریخ کار",
+                lblTimeStart: "ساعت شروع",
+                lblTimeEnd: "ساعت پایان",
+                lblBreakHours: "استراحت بدون حقوق (ساعت)",
+                btnSaveShift: "ثبت شیفت کاری",
+                shiftListTitle: "فهرست شیفت‌ها",
+                payAddTitle: "ثبت / ویرایش پرداخت",
+                lblPayDate: "تاریخ پرداخت",
+                lblPayAmount: "مبلغ دریافتی (€)",
+                lblPayMethod: "روش پرداخت",
+                optBank: "پرداخت به کارت بانکی",
+                optCash: "پرداخت پول نقد",
+                btnSavePay: "ثبت پرداخت",
+                payLedgerTitle: "فهرست پرداخت‌های انجام‌شده",
+                paySummaryTitle: "دفتر مانده معاش و طلب‌ها",
+                thGrossTotal: "کل حقوق",
+                thReceived: "دریافتی",
+                thRemaining: "باقی‌مانده",
+                thAmount: "مبلغ",
+                thMethod: "روش",
+                sheetTitle: "برگه ساعات ماهانه و آپلود عکس",
+                sheetDesc: "عکس برگه کاغذی را آپلود کنید تا همیشه ذخیره بماند.",
+                lblMonthYear: "ماه و سال",
+                lblEmployerHours: "ساعات روی برگه کارفرما",
+                lblUploadPhoto: "آپلود عکس برگه ساعات کاری",
+                btnSaveSheet: "ذخیره برگه ماهانه",
+                sheetListTitle: "برگه‌های آپلود شده",
+                thMonth: "ماه",
+                thPhoto: "عکس برگه",
+                docAddTitle: "ثبت / ویرایش قرارداد و اسناد",
+                lblDocType: "نوع سند",
+                lblDocTitle: "عنوان سند",
+                lblUploadDocPhoto: "آپلود عکس سند یا قرارداد",
+                defaultDocTitle: "قرارداد کار",
+                optContract: "قرارداد کاری",
+                optPayslip: "فیش معاش",
+                optReceipt: "رسید",
+                optOther: "سایر",
+                btnSaveDoc: "ذخیره سند",
+                docListTitle: "فهرست اسناد",
+                thTitle: "عنوان",
+                thType: "نوع",
+                leaveTitle: "مرخصی و بیماری",
+                leaveDesc: "ثبت روزهای مرخصی استحقاقی یا استعلاجی (بیماری).",
+                lblLeaveType: "نوع",
+                lblLeaveDate: "تاریخ مرخصی/بیماری",
+                optSick: "بیماری",
+                optVacation: "مرخصی",
+                btnSaveLeave: "ثبت مرخصی",
+                calendarTitle: "تقویم کاری",
+                calendarDesc: "برنامه کامل شیفت‌های شما.",
+                reportsTitle: "گزارش‌گیری پیشرفته",
+                reportsDesc: "آمار جامع ساعات و درآمد شما.",
+                settingsTitle: "پشتیبان‌گیری و اطلاعات",
+                btnExport: "پشتیبان‌گیری (JSON)",
+                btnImport: "بازیابی اطلاعات",
+                msgNoRecord: "ثبت نشده است.",
+                msgNoCompany: "شرکتی ثبت نشده است.",
+                msgNoPayment: "پرداختی ثبت نشده است.",
+                msgNoData: "اطلاعاتی موجود نیست.",
+                msgNoSheet: "برگه‌ای ثبت نشده است.",
+                msgNoDoc: "سندی ثبت نشده است.",
+                btnEdit: "ویرایش",
+                btnDelete: "حذف"
+            },
+            fi: {
+                navDashboard: "📊 Koontinäyttö",
+                navCompanies: "🏢 Yritykset",
+                navProfile: "👤 Profiili",
+                navShifts: "⏱️ Työtunnit",
+                navPayroll: "💶 Palkat",
+                navMonthlySheets: "📑 Kuukausiraportti",
+                navContracts: "📜 Sopimukset",
+                navLeave: "🩺 Sairaus / Loma",
+                navCalendar: "📅 Kalenteri",
+                navReports: "📈 Raportit",
+                navSettings: "⚙️ Asetukset",
+                dashTitle: "Koontinäyttö",
+                optAllCompanies: "Kaikki yritykset",
+                statCompanies: "Rekisteröidyt yritykset",
+                statHours: "Tunnit yhteensä",
+                statGross: "Bruttotulot yhteensä",
+                dashRecentShifts: "Viimeisimmät vuorot",
+                thDate: "Pvm",
+                thCompany: "Yritys",
+                thHours: "Tunnit",
+                thPay: "Palkka",
+                thActions: "Toiminnot",
+                compAddTitle: "Lisää / Muokkaa yritystä ja työnantajia",
+                lblCompanyName: "Yrityksen nimi",
+                lblHourlyRate: "Tuntipalkka (€)",
+                phCompanyName: "Kirjoita yrityksen nimi",
+                phHourlyRate: "Esim. 12.5",
+                lblEmployersListTitle: "Työnantajat",
+                btnAddEmployer: "+ Lisää työnantaja",
+                lblEmpTitle: "Työnantajan tiedot",
+                lblEmpName: "Etunimi",
+                lblEmpLastName: "Sukunimi",
+                lblEmpPhone: "Puhelinnumero",
+                btnSaveCompany: "Tallenna yritys",
+                compListTitle: "Yrityslista",
+                thName: "Yritys",
+                thEmployers: "Työnantajat",
+                thRate: "Palkka",
+                profileTitle: "Henkilötiedot",
+                lblFullName: "Koko nimi",
+                lblEmail: "Sähköposti / Puhelin",
+                phFullName: "Kirjoita nimesi",
+                phEmail: "Sähköposti tai puhelin",
+                btnSaveProfile: "Tallenna profiili",
+                shiftAddTitle: "Kirjaa / Muokkaa työtunteja",
+                lblSelectCompany: "Valitse yritys",
+                lblShiftDate: "Päivämäärä",
+                lblTimeStart: "Alku",
+                lblTimeEnd: "Loppu",
+                lblBreakHours: "Tauko (h)",
+                btnSaveShift: "Tallenna vuoro",
+                shiftListTitle: "Työtuntilista",
+                payAddTitle: "Kirjaa / Muokkaa maksua",
+                lblPayDate: "Maksupäivä",
+                lblPayAmount: "Summa (€)",
+                lblPayMethod: "Maksutapa",
+                optBank: "Pankkisiirto / Kortti",
+                optCash: "Käteinen",
+                btnSavePay: "Tallenna maksu",
+                payLedgerTitle: "Maksetut suoritukset",
+                paySummaryTitle: "Palkkakirjanpito",
+                thGrossTotal: "Koko palkka",
+                thReceived: "Saatu",
+                thRemaining: "Jäljellä",
+                thAmount: "Summa",
+                thMethod: "Tapa",
+                sheetTitle: "Kuukausittainen työaikaraportti ja kuva",
+                sheetDesc: "Lataa kuva paperisesta työaikalapusta.",
+                lblMonthYear: "Kuukausi",
+                lblEmployerHours: "Tunnit paperilla",
+                lblUploadPhoto: "Lataa kuva työaikalapusta",
+                btnSaveSheet: "Tallenna raportti",
+                sheetListTitle: "Tallennetut raportit",
+                thMonth: "KK",
+                thPhoto: "Kuva",
+                docAddTitle: "Lisää / Muokkaa asiakirjaa",
+                lblDocType: "Tyyppi",
+                lblDocTitle: "Otsikko",
+                lblUploadDocPhoto: "Lataa kuva sopimuksesta",
+                defaultDocTitle: "Työsopimus",
+                optContract: "Työsopimus",
+                optPayslip: "Palkkalaskelma",
+                optReceipt: "Kuitti",
+                optOther: "Muu",
+                btnSaveDoc: "Tallenna",
+                docListTitle: "Asiakirjat",
+                thTitle: "Otsikko",
+                thType: "Tyyppi",
+                leaveTitle: "Sairausloma ja lomat",
+                leaveDesc: "Kirjaa sairauspoissaolot tai lomat.",
+                lblLeaveType: "Tyyppi",
+                lblLeaveDate: "Päivämäärä",
+                optSick: "Sairausloma",
+                optVacation: "Loma",
+                btnSaveLeave: "Tallenna",
+                calendarTitle: "Työkalenteri",
+                calendarDesc: "Yhteenveto vuoroistasi.",
+                reportsTitle: "Edistyneet raportit",
+                reportsDesc: "Laaja analyysi tunneista ja tuloista.",
+                settingsTitle: "Varmuuskopiointi",
+                btnExport: "Varmuuskopioi (JSON)",
+                btnImport: "Palauta tiedot",
+                msgNoRecord: "Ei merkintöjä.",
+                msgNoCompany: "Ei rekisteröityjä yrityksiä.",
+                msgNoPayment: "Ei maksuja.",
+                msgNoData: "Ei tietoja.",
+                msgNoSheet: "Ei raportteja.",
+                msgNoDoc: "Ei asiakirjoja.",
+                btnEdit: "Muokkaa",
+                btnDelete: "Poista"
+            }
+        };
+
+        function toggleTheme() {
+            const root = document.getElementById('htmlRoot');
+            const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('themeToggleBtn').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('appSidebar').classList.toggle('mobile-open');
+        }
+
+        function changeLanguage(lang) {
+            document.getElementById('htmlRoot').setAttribute('lang', lang);
+            document.getElementById('htmlRoot').setAttribute('dir', lang === 'fa' ? 'rtl' : 'ltr');
+            document.getElementById('languageSelector').value = lang;
+            localStorage.setItem('lang', lang);
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const k = el.getAttribute('data-i18n');
+                if(i18n[lang] && i18n[lang][k]) el.textContent = i18n[lang][k];
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const k = el.getAttribute('data-i18n-placeholder');
+                if(i18n[lang] && i18n[lang][k]) el.placeholder = i18n[lang][k];
+            });
+
+            const activeSec = document.querySelector('.view-section.active');
+            if(activeSec) {
+                const titleKey = activeSec.getAttribute('data-title-key');
+                if(titleKey && i18n[lang][titleKey]) {
+                    document.getElementById('currentViewTitle').textContent = i18n[lang][titleKey];
+                }
+            }
+
+            const docTitleInp = document.getElementById('docTitleInput');
+            if(docTitleInp && !document.getElementById('editDocId').value) {
+                docTitleInp.value = i18n[lang].defaultDocTitle;
+            }
+
+            document.querySelectorAll('.employer-box').forEach(box => {
+                const titleSpan = box.querySelector('.emp-box-title');
+                if(titleSpan) titleSpan.textContent = i18n[lang].lblEmpTitle;
+                const delBtn = box.querySelector('.emp-del-btn');
+                if(delBtn) delBtn.textContent = i18n[lang].btnDelete;
+                
+                const nameInp = box.querySelector('.emp-name');
+                if(nameInp) nameInp.placeholder = i18n[lang].lblEmpName;
+                const lastInp = box.querySelector('.emp-lastname');
+                if(lastInp) lastInp.placeholder = i18n[lang].lblEmpLastName;
+                const phoneInp = box.querySelector('.emp-phone');
+                if(phoneInp) phoneInp.placeholder = i18n[lang].lblEmpPhone;
+            });
+
+            refreshAllDataViews();
+        }
+
+        function switchView(viewName, btn, titleKey) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const targetSec = document.getElementById('view-' + viewName);
+            targetSec.classList.add('active');
+            if(btn) btn.classList.add('active');
+
+            document.getElementById('appSidebar').classList.remove('mobile-open');
+
+            const lang = localStorage.getItem('lang') || 'fa';
+            if(titleKey && i18n[lang][titleKey]) {
+                document.getElementById('currentViewTitle').textContent = i18n[lang][titleKey];
+            }
+            refreshAllDataViews();
+        }
+
+        function showModal(src) {
+            document.getElementById('modalImg').src = src;
+            document.getElementById('imgModal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('imgModal').style.display = 'none';
+        }
+
+        function addEmployerField(name = '', lastname = '', phone = '') {
+            const lang = localStorage.getItem('lang') || 'fa';
+            const container = document.getElementById('employersContainer');
+            const div = document.createElement('div');
+            div.className = 'employer-box';
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span class="emp-box-title" style="font-size:0.85rem; font-weight:bold; color:var(--primary);">${i18n[lang].lblEmpTitle}</span>
+                    <button type="button" class="btn-danger emp-del-btn" style="padding:3px 8px; font-size:0.75rem;" onclick="this.parentElement.parentElement.remove()">${i18n[lang].btnDelete}</button>
+                </div>
+                <input type="text" class="emp-name" placeholder="${i18n[lang].lblEmpName}" value="${name}" required>
+                <input type="text" class="emp-lastname" placeholder="${i18n[lang].lblEmpLastName}" value="${lastname}">
+                <input type="text" class="emp-phone" placeholder="${i18n[lang].lblEmpPhone}" value="${phone}">
+            `;
+            container.appendChild(div);
+        }
+
+        function saveCompany(e) {
+            e.preventDefault();
+            const data = getAppData();
+            const editId = document.getElementById('editCompanyId').value;
+            const employers = [];
+            document.querySelectorAll('.employer-box').forEach(box => {
+                const name = box.querySelector('.emp-name').value;
+                const lastname = box.querySelector('.emp-lastname').value;
+                const phone = box.querySelector('.emp-phone').value;
+                if(name) employers.push({ name, lastname, phone });
+            });
+
+            const compObj = {
+                id: editId ? parseInt(editId) : Date.now(),
+                name: document.getElementById('compName').value,
+                rate: parseFloat(document.getElementById('compRate').value.replace(',', '.')) || 0,
+                employers: employers
+            };
+
+            if(editId) {
+                data.companies = data.companies.map(c => c.id == editId ? compObj : c);
+                document.getElementById('editCompanyId').value = '';
+            } else {
+                data.companies.push(compObj);
+            }
+            saveAppData(data);
+            e.target.reset();
+            document.getElementById('employersContainer').innerHTML = '';
+            addEmployerField();
+            refreshAllDataViews();
+            alert('OK');
+        }
+
+        function editCompany(id) {
+            const data = getAppData();
+            const c = data.companies.find(x => x.id == id);
+            if(!c) return;
+            document.getElementById('editCompanyId').value = c.id;
+            document.getElementById('compName').value = c.name;
+            document.getElementById('compRate').value = c.rate;
+            const container = document.getElementById('employersContainer');
+            container.innerHTML = '';
+            if(c.employers && c.employers.length > 0) {
+                c.employers.forEach(emp => addEmployerField(emp.name, emp.lastname, emp.phone));
+            } else {
+                addEmployerField();
+            }
+            switchView('companies', document.querySelector('button[onclick*="companies"]'), 'compListTitle');
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const data = getAppData();
+            data.profile = {
+                name: document.getElementById('profileName').value,
+                contact: document.getElementById('profileContact').value
+            };
+            saveAppData(data);
+            alert('OK');
+        }
+
+        function saveShift(e) {
+            e.preventDefault();
+            const data = getAppData();
+            const editId = document.getElementById('editShiftId').value;
+            const start = document.getElementById('shiftStart').value;
+            const end = document.getElementById('shiftEnd').value;
+            const breakH = parseFloat(document.getElementById('shiftBreak').value) || 0;
+            const [sH, sM] = start.split(':').map(Number);
+            const [eH, eM] = end.split(':').map(Number);
+            let sMin = sH * 60 + sM, eMin = eH * 60 + eM;
+            if (eMin <= sMin) eMin += 1440;
+            let payable = Math.max(0, (eMin - sMin - breakH * 60) / 60);
+
+            const shiftObj = {
+                id: editId ? parseInt(editId) : Date.now(),
+                companyId: parseInt(document.getElementById('shiftCompanyId').value),
+                date: document.getElementById('shiftDate').value,
+                start, end, breakHours: breakH, payableHours: payable
+            };
+            if(editId) {
+                data.shifts = data.shifts.map(s => s.id == editId ? shiftObj : s);
+                document.getElementById('editShiftId').value = '';
+            } else {
+                data.shifts.push(shiftObj);
+            }
+            saveAppData(data);
+            e.target.reset();
+            refreshAllDataViews();
+            alert('OK');
+        }
+
+        function editShift(id) {
+            const data = getAppData();
+            const s = data.shifts.find(x => x.id == id);
+            if(!s) return;
+            document.getElementById('editShiftId').value = s.id;
+            document.getElementById('shiftCompanyId').value = s.companyId;
+            document.getElementById('shiftDate').value = s.date;
+            document.getElementById('shiftStart').value = s.start;
+            document.getElementById('shiftEnd').value = s.end;
+            document.getElementById('shiftBreak').value = s.breakHours;
+            switchView('shifts', document.querySelector('button[onclick*="shifts"]'), 'shiftAddTitle');
+        }
+
+        function savePayment(e) {
+            e.preventDefault();
+            const data = getAppData();
+            const editId = document.getElementById('editPaymentId').value;
+            const payObj = {
+                id: editId ? parseInt(editId) : Date.now(),
+                companyId: parseInt(document.getElementById('paymentCompanyId').value),
+                date: document.getElementById('paymentDate').value,
+                amount: parseFloat(document.getElementById('paymentAmount').value.replace(',', '.')) || 0,
+                method: document.getElementById('paymentMethod').value
+            };
+            if(editId) {
+                data.payments = data.payments.map(p => p.id == editId ? payObj : p);
+                document.getElementById('editPaymentId').value = '';
+            } else {
+                data.payments.push(payObj);
+            }
+            saveAppData(data);
+            e.target.reset();
+            refreshAllDataViews();
+            alert('OK');
+        }
+
+        function editPayment(id) {
+            const data = getAppData();
+            const p = data.payments.find(x => x.id == id);
+            if(!p) return;
+            document.getElementById('editPaymentId').value = p.id;
+            document.getElementById('paymentCompanyId').value = p.companyId;
+            document.getElementById('paymentDate').value = p.date;
+            document.getElementById('paymentAmount').value = p.amount;
+            document.getElementById('paymentMethod').value = p.method || 'bank';
+            switchView('payroll', document.querySelector('button[onclick*="payroll"]'), 'payAddTitle');
+        }
+
+        function saveMonthlySheet(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('sheetPhotoInput');
+            const editId = document.getElementById('editSheetId').value;
+            const processSave = (photoBase64) => {
+                const data = getAppData();
+                const sheetObj = {
+                    id: editId ? parseInt(editId) : Date.now(),
+                    companyId: parseInt(document.getElementById('sheetCompanyId').value),
+                    monthYear: document.getElementById('sheetMonthYear').value,
+                    employerHours: parseFloat(document.getElementById('sheetEmployerHours').value) || 0,
+                    photo: photoBase64 || (editId ? data.sheets.find(x => x.id == editId)?.photo : '')
+                };
+                if(editId) {
+                    data.sheets = data.sheets.map(sh => sh.id == editId ? sheetObj : sh);
+                    document.getElementById('editSheetId').value = '';
+                } else {
+                    data.sheets.push(sheetObj);
+                }
+                saveAppData(data);
+                e.target.reset();
+                refreshAllDataViews();
+                alert('OK');
+            };
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = ev => processSave(ev.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else { processSave(null); }
+        }
+
+        function editSheet(id) {
+            const data = getAppData();
+            const sh = data.sheets.find(x => x.id == id);
+            if(!sh) return;
+            document.getElementById('editSheetId').value = sh.id;
+            document.getElementById('sheetCompanyId').value = sh.companyId;
+            document.getElementById('sheetMonthYear').value = sh.monthYear;
+            document.getElementById('sheetEmployerHours').value = sh.employerHours;
+            switchView('monthlySheets', document.querySelector('button[onclick*="monthlySheets"]'), 'sheetTitle');
+        }
+
+        function saveDocument(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('docPhotoInput');
+            const editId = document.getElementById('editDocId').value;
+            const processSave = (photoBase64) => {
+                const data = getAppData();
+                const docObj = {
+                    id: editId ? parseInt(editId) : Date.now(),
+                    companyId: parseInt(document.getElementById('docCompanyId').value),
+                    type: document.getElementById('docType').value,
+                    title: document.getElementById('docTitleInput').value,
+                    date: new Date().toISOString().split('T')[0],
+                    photo: photoBase64 || (editId ? data.documents.find(x => x.id == editId)?.photo : '')
+                };
+                if(editId) {
+                    data.documents = data.documents.map(d => d.id == editId ? docObj : d);
+                    document.getElementById('editDocId').value = '';
+                } else {
+                    data.documents.push(docObj);
+                }
+                saveAppData(data);
+                e.target.reset();
+                const lang = localStorage.getItem('lang') || 'fa';
+                document.getElementById('docTitleInput').value = i18n[lang].defaultDocTitle;
+                refreshAllDataViews();
+                alert('OK');
+            };
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = ev => processSave(ev.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else { processSave(null); }
+        }
+
+        function editDocument(id) {
+            const data = getAppData();
+            const d = data.documents.find(x => x.id == id);
+            if(!d) return;
+            document.getElementById('editDocId').value = d.id;
+            document.getElementById('docCompanyId').value = d.companyId;
+            document.getElementById('docType').value = d.type;
+            document.getElementById('docTitleInput').value = d.title;
+            switchView('contracts', document.querySelector('button[onclick*="contracts"]'), 'docAddTitle');
+        }
+
+        function saveLeave(e) {
+            e.preventDefault();
+            const data = getAppData();
+            data.leaves.push({
+                id: Date.now(),
+                type: document.getElementById('leaveType').value,
+                date: document.getElementById('leaveDate').value
+            });
+            saveAppData(data);
+            e.target.reset();
+            refreshAllDataViews();
+            alert('OK');
+        }
+
+        function deleteRecord(store, id) {
+            if (confirm('Delete?')) {
+                const data = getAppData();
+                data[store] = data[store].filter(i => i.id !== id);
+                saveAppData(data);
+                refreshAllDataViews();
+            }
+        }
+
+        function exportData() {
+            const blob = new Blob([localStorage.getItem(DB_KEY)], { type: 'json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'work-backup.json';
+            a.click();
+        }
+
+        function importDataPrompt() {
+            const inp = document.createElement('input');
+            inp.type = 'file';
+            inp.accept = '.json';
+            inp.onchange = async e => {
+                try {
+                    const text = await e.target.files[0].text();
+                    JSON.parse(text);
+                    localStorage.setItem(DB_KEY, text);
+                    refreshAllDataViews();
+                    alert('OK');
+                } catch(err) { alert('Error'); }
+            };
+            inp.click();
+        }
+
+        function refreshAllDataViews() {
+            const data = getAppData();
+            const filterVal = document.getElementById('globalCompanyFilter').value;
+            const lang = localStorage.getItem('lang') || 'fa';
+
+            if(data.profile) {
+                document.getElementById('profileName').value = data.profile.name || '';
+                document.getElementById('profileContact').value = data.profile.contact || '';
+            }
+
+            ['shiftCompanyId', 'paymentCompanyId', 'sheetCompanyId', 'docCompanyId', 'globalCompanyFilter'].forEach(sId => {
+                const sel = document.getElementById(sId);
+                if(!sel) return;
+                const cur = sel.value;
+                let h = sId === 'globalCompanyFilter' ? `<option value="all">${i18n[lang].optAllCompanies}</option>` : '';
+                data.companies.forEach(c => { 
+                    const localizedName = getLocalizedCompanyName(c.name, lang);
+                    h += `<option value="${c.id}">${localizedName} (${c.rate} €)</option>`; 
+                });
+                sel.innerHTML = h;
+                sel.value = cur;
+            });
+
+            const fShifts = filterVal === 'all' ? data.shifts : data.shifts.filter(s => s.companyId == filterVal);
+            const fPayments = filterVal === 'all' ? data.payments : data.payments.filter(p => p.companyId == filterVal);
+
+            document.getElementById('dashTotalCompanies').textContent = data.companies.length;
+            let totalH = fShifts.reduce((a, s) => a + s.payableHours, 0);
+            document.getElementById('dashTotalHours').textContent = totalH.toFixed(2) + (lang === 'fi' ? ' h' : ' ساعت');
+
+            let gross = 0;
+            fShifts.forEach(s => {
+                const c = data.companies.find(x => x.id == s.companyId);
+                gross += s.payableHours * (c ? c.rate : 0);
+            });
+            document.getElementById('dashGrossPay').textContent = gross.toFixed(2) + ' €';
+
+            document.getElementById('companiesTableBody').innerHTML = data.companies.length ? data.companies.map(c => {
+                let localizedName = getLocalizedCompanyName(c.name, lang);
+                let empsHtml = c.employers && c.employers.length ? c.employers.map(e => `${e.name} ${e.lastname || ''} (${e.phone || '-'})`).join('<br>') : '-';
+                return `<tr><td>${localizedName}</td><td><div style="font-size:0.85rem;">${empsHtml}</div></td><td>${c.rate} €</td><td><button class="btn-warning" onclick="editCompany(${c.id})">${i18n[lang].btnEdit}</button> <button class="btn-danger" onclick="deleteRecord('companies', ${c.id})">${i18n[lang].btnDelete}</button></td></tr>`;
+            }).join('') : `<tr><td colspan="4" style="text-align:center;">${i18n[lang].msgNoCompany}</td></tr>`;
+            
+            const shiftRows = fShifts.length ? fShifts.map(s => {
+                const c = data.companies.find(x => x.id == s.companyId);
+                const localizedName = c ? getLocalizedCompanyName(c.name, lang) : '-';
+                const pay = s.payableHours * (c ? c.rate : 0);
+                return `<tr><td>${s.date}</td><td>${localizedName}</td><td>${s.payableHours.toFixed(2)}h</td><td>${pay.toFixed(2)} €</td><td><button class="btn-warning" onclick="editShift(${s.id})">${i18n[lang].btnEdit}</button> <button class="btn-danger" onclick="deleteRecord('shifts', ${s.id})">${i18n[lang].btnDelete}</button></td></tr>`;
+            }).join('') : `<tr><td colspan="5" style="text-align:center;">${i18n[lang].msgNoRecord}</td></tr>`;
+            document.getElementById('shiftsTableBody').innerHTML = shiftRows;
+            document.getElementById('dashShiftsTableBody').innerHTML = shiftRows;
+
+            document.getElementById('paymentsTableBody').innerHTML = fPayments.length ? fPayments.map(p => {
+                const c = data.companies.find(x => x.id == p.companyId);
+                const localizedName = c ? getLocalizedCompanyName(c.name, lang) : '-';
+                const methodText = p.method === 'cash' ? (lang === 'fa' ? 'پول نقد' : 'Käteinen') : (lang === 'fa' ? 'کارت بانکی' : 'Pankkisiirto / Kortti');
+                return `<tr><td>${p.date}</td><td>${localizedName}</td><td>${p.amount.toFixed(2)} €</td><td>${methodText}</td><td><button class="btn-warning" onclick="editPayment(${p.id})">${i18n[lang].btnEdit}</button> <button class="btn-danger" onclick="deleteRecord('payments', ${p.id})">${i18n[lang].btnDelete}</button></td></tr>`;
+            }).join('') : `<tr><td colspan="5" style="text-align:center;">${i18n[lang].msgNoPayment}</td></tr>`;
+
+            document.getElementById('payrollSummaryTableBody').innerHTML = data.companies.length ? data.companies.map(c => {
+                const localizedName = getLocalizedCompanyName(c.name, lang);
+                const sSum = data.shifts.filter(s => s.companyId == c.id).reduce((a,s)=>a+s.payableHours,0)*c.rate;
+                const rec = data.payments.filter(p => p.companyId == c.id).reduce((a,p)=>a+p.amount,0);
+                const rem = sSum - rec;
+                return `<tr><td>${localizedName}</td><td>${sSum.toFixed(2)} €</td><td>${rec.toFixed(2)} €</td><td><b>${rem.toFixed(2)} €</b></td></tr>`;
+            }).join('') : `<tr><td colspan="4" style="text-align:center;">${i18n[lang].msgNoData}</td></tr>`;
+
+            document.getElementById('sheetsTableBody').innerHTML = data.sheets.length ? data.sheets.map(sh => {
+                const c = data.companies.find(x => x.id == sh.companyId);
+                const localizedName = c ? getLocalizedCompanyName(c.name, lang) : '-';
+                const imgTag = sh.photo ? `<img src="${sh.photo}" class="preview-img" onclick="showModal('${sh.photo}')">` : '-';
+                return `<tr><td>${sh.monthYear}</td><td>${localizedName}</td><td>${imgTag}</td><td><button class="btn-warning" onclick="editSheet(${sh.id})">${i18n[lang].btnEdit}</button> <button class="btn-danger" onclick="deleteRecord('sheets', ${sh.id})">${i18n[lang].btnDelete}</button></td></tr>`;
+            }).join('') : `<tr><td colspan="4" style="text-align:center;">${i18n[lang].msgNoSheet}</td></tr>`;
+
+            document.getElementById('documentsTableBody').innerHTML = data.documents.length ? data.documents.map(d => {
+                const c = data.companies.find(x => x.id == d.companyId);
+                const localizedName = c ? getLocalizedCompanyName(c.name, lang) : '-';
+                const imgTag = d.photo ? `<img src="${d.photo}" class="preview-img" onclick="showModal('${d.photo}')">` : '-';
+                return `<tr><td>${d.title}</td><td>${d.type}</td><td>${localizedName}</td><td>${imgTag}</td><td><button class="btn-warning" onclick="editDocument(${d.id})">${i18n[lang].btnEdit}</button> <button class="btn-danger" onclick="deleteRecord('documents', ${d.id})">${i18n[lang].btnDelete}</button></td></tr>`;
+            }).join('') : `<tr><td colspan="5" style="text-align:center;">${i18n[lang].msgNoDoc}</td></tr>`;
+
+            document.getElementById('leaveTableBody').innerHTML = data.leaves.length ? data.leaves.map(l => {
+                return `<tr><td>${l.date}</td><td>${l.type}</td><td><button class="btn-danger" onclick="deleteRecord('leaves', ${l.id})">${i18n[lang].btnDelete}</button></td></tr>`;
+            }).join('') : `<tr><td colspan="3" style="text-align:center;">${i18n[lang].msgNoRecord}</td></tr>`;
+
+            document.getElementById('reportSummaryBox').innerHTML = (lang === 'fi' ? 'Yhteensä tunnit: ' : 'مجموع ساعات: ') + totalH.toFixed(2) + ' | ' + (lang === 'fi' ? 'Brutto yhteensä: ' : 'کل درآمد: ') + gross.toFixed(2) + ' €';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.getElementById('htmlRoot').setAttribute('data-theme', savedTheme);
+            document.getElementById('themeToggleBtn').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+            
+            const currentLang = localStorage.getItem('lang') || 'fa';
+            changeLanguage(currentLang);
+            document.getElementById('docTitleInput').value = i18n[currentLang].defaultDocTitle;
+
+            if(document.getElementById('employersContainer').children.length === 0) {
+                addEmployerField();
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+  <script>
+    
+  </script>
+</body>
+</html>
