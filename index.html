@@ -1,20 +1,4 @@
 <!DOCTYPE html>
-<html>
-
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>JSFiddle q7wtLhyv</title>
-
-  <style>
-    
-  </style>
-
-  
-</head>
-<body>
-  <!DOCTYPE html>
 <html lang="fa" dir="rtl" id="htmlRoot" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -229,6 +213,8 @@
                 <div class="stat-card"><span class="stat-title" data-i18n="statCompanies">شرکت‌های ثبت‌شده</span><span class="stat-value" id="dashTotalCompanies">0</span></div>
                 <div class="stat-card"><span class="stat-title" data-i18n="statHours">مجموع ساعات</span><span class="stat-value" id="dashTotalHours">0 ساعت</span></div>
                 <div class="stat-card"><span class="stat-title" data-i18n="statGross">کل درآمد (ناخالص)</span><span class="stat-value" id="dashGrossPay">0.00 €</span></div>
+                <div class="stat-card"><span class="stat-title" data-i18n="statReceived">کل پول دریافتی (رسیدها)</span><span class="stat-value" id="dashReceivedPay" style="color: var(--success);">0.00 €</span></div>
+                <div class="stat-card"><span class="stat-title" data-i18n="statRemaining">مبلغ باقی‌مانده (طلب شما)</span><span class="stat-value" id="dashRemainingPay" style="color: var(--warning);">0.00 €</span></div>
                 
                 <div class="card">
                     <h4 data-i18n="dashRecentShifts" style="margin-bottom: 12px; color: var(--text-secondary);">آخرین شیفت‌های ثبت‌شده</h4>
@@ -462,14 +448,13 @@
     </div>
 
     <script>
-        const DB_KEY = "MyWorkManager_Full_v22";
+        const DB_KEY = "MyWorkManager_Full_v23";
         function getAppData() {
             try { return JSON.parse(localStorage.getItem(DB_KEY)) || { companies: [], shifts: [], payments: [], sheets: [], documents: [], profile: {}, leaves: [] }; }
             catch(e) { return { companies: [], shifts: [], payments: [], sheets: [], documents: [], profile: {}, leaves: [] }; }
         }
         function saveAppData(d) { localStorage.setItem(DB_KEY, JSON.stringify(d)); }
 
-        // Smart translation mapping for company names across languages
         const companyTranslations = {
             "رستوران و پیتزا فروشی سولی": "Ravintola ja Pizzeria Soli",
             "Ravintola ja Pizzeria Soli": "رستوران و پیتزا فروشی سولی",
@@ -482,7 +467,6 @@
             if (targetLang === 'fi') {
                 return companyTranslations[name] || name;
             } else {
-                // Find Persian equivalent if switching to fa
                 for (let fa in companyTranslations) {
                     if (companyTranslations[fa] === name) return fa;
                 }
@@ -508,6 +492,8 @@
                 statCompanies: "شرکت‌های ثبت‌شده",
                 statHours: "مجموع ساعات",
                 statGross: "کل درآمد (ناخالص)",
+                statReceived: "کل پول دریافتی (رسیدها)",
+                statRemaining: "مبلغ باقی‌مانده (طلب شما)",
                 dashRecentShifts: "آخرین شیفت‌های ثبت‌شده",
                 thDate: "تاریخ",
                 thCompany: "شرکت",
@@ -620,6 +606,8 @@
                 statCompanies: "Rekisteröidyt yritykset",
                 statHours: "Tunnit yhteensä",
                 statGross: "Bruttotulot yhteensä",
+                statReceived: "Saadut maksut yhteensä",
+                statRemaining: "Jäljellä oleva saldo",
                 dashRecentShifts: "Viimeisimmät vuorot",
                 thDate: "Pvm",
                 thCompany: "Yritys",
@@ -1127,6 +1115,14 @@
             });
             document.getElementById('dashGrossPay').textContent = gross.toFixed(2) + ' €';
 
+            // Calculate total received payments
+            let totalReceived = fPayments.reduce((a, p) => a + p.amount, 0);
+            document.getElementById('dashReceivedPay').textContent = totalReceived.toFixed(2) + ' €';
+
+            // Calculate remaining balance (Gross - Received)
+            let remaining = gross - totalReceived;
+            document.getElementById('dashRemainingPay').textContent = remaining.toFixed(2) + ' €';
+
             document.getElementById('companiesTableBody').innerHTML = data.companies.length ? data.companies.map(c => {
                 let localizedName = getLocalizedCompanyName(c.name, lang);
                 let empsHtml = c.employers && c.employers.length ? c.employers.map(e => `${e.name} ${e.lastname || ''} (${e.phone || '-'})`).join('<br>') : '-';
@@ -1192,12 +1188,5 @@
             }
         });
     </script>
-</body>
-</html>
-
-
-  <script>
-    
-  </script>
 </body>
 </html>
